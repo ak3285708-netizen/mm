@@ -87,6 +87,16 @@
             margin-bottom: 12px;
         }
 
+        .hint {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 30px;
+            margin-top: 6px;
+        }
+
         .form-section {
             padding: 8px 20px 20px;
         }
@@ -230,6 +240,10 @@
             .title {
                 font-size: 22px;
             }
+            
+            .hint {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -244,6 +258,7 @@
             <div class="question-mark">?</div>
             <div class="title">Сколько M&M's в банке?</div>
             <div class="sub">Угадай точное количество</div>
+            <span class="hint">от 300 до 600</span>
         </div>
 
         <div class="form-section">
