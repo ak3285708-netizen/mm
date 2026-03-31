@@ -2,10 +2,9 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOONY | QR-код акции</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MOONY | Угадай M&M's</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,177 +13,290 @@
         }
 
         body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #B1B1E8 0%, #8A8AD6 100%);
             min-height: 100vh;
-            background: linear-gradient(135deg, #E8E4F8 0%, #D6D2F0 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            font-family: 'Inter', sans-serif;
         }
 
-        /* ВНЕШНИЙ ФИОЛЕТОВЫЙ КВАДРАТ — БЕЗ СКРУГЛЕНИЙ */
-        .outer {
-            background: #B1B1E8;
-            padding: 24px;
-            box-shadow: 0 20px 35px rgba(138, 138, 214, 0.35);
-            max-width: 500px;
+        .card {
+            max-width: 480px;
             width: 100%;
+            background: #B1B1E8;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
         }
 
-        /* ВНУТРЕННИЙ БЕЛЫЙ КВАДРАТ — БЕЗ СКРУГЛЕНИЙ */
-        .inner {
+        .header {
             background: white;
-            padding: 36px 28px 40px;
+            padding: 28px 20px;
             text-align: center;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02), 0 4px 12px rgba(0,0,0,0.03);
         }
 
-        /* ЛОГОТИП */
         .logo {
             font-family: 'Lora', serif;
-            font-size: 2.4rem;
+            font-size: 28px;
             font-weight: 700;
             color: #B1B1E8;
             letter-spacing: 2px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            background: #F0F0FF;
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #8A8AD6;
+        }
+
+        .jar-section {
+            padding: 32px 24px 16px;
+            text-align: center;
+        }
+
+        .question-mark {
+            font-family: 'Lora', serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-family: 'Lora', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
         }
 
         .sub {
-            font-size: 0.8rem;
-            color: #8A8AD6;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 500;
-            letter-spacing: 0.5px;
-            margin-bottom: 28px;
+            margin-bottom: 16px;
         }
 
-        /* КОНТЕЙНЕР QR-КОДА — БЕЗ СКРУГЛЕНИЙ */
-        .qr-wrapper {
-            background: #F8F8FF;
-            padding: 20px;
-            margin-bottom: 24px;
+        .form-section {
+            padding: 8px 24px 24px;
         }
 
-        #qrcode {
+        .input-group {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        #qrcode canvas,
-        #qrcode img {
-            width: 200px;
-            height: 200px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* ТЕКСТ ПОД QR */
-        .scan-text {
-            font-size: 0.9rem;
-            color: #5A5A9A;
+        input {
+            flex: 1;
+            padding: 16px 18px;
+            font-size: 18px;
             font-weight: 500;
-            margin-bottom: 28px;
+            text-align: center;
+            border: none;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #2D2D3A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* ДЕКОРАТИВНАЯ ЛИНИЯ */
-        .divider {
-            width: 50px;
-            height: 2px;
-            background: #E0DCF5;
-            margin: 0 auto 24px;
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
         }
 
-        /* ОПИСАНИЕ АКЦИИ */
-        .promo-desc {
-            font-size: 0.85rem;
-            color: #6A6A7A;
-            line-height: 1.6;
-        }
-
-        .highlight {
+        button {
+            background: white;
             color: #B1B1E8;
-            font-weight: 600;
+            border: none;
+            padding: 16px 28px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .footer {
-            margin-top: 24px;
-            font-size: 0.7rem;
-            color: #A0A0C0;
-            letter-spacing: 0.3px;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-top: 12px;
+            padding: 18px;
+            border-radius: 16px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            background: white;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result.lose {
+            background: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #F44336;
+        }
+
+        .prize-text {
+            font-weight: 700;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 15px;
+        }
+
+        .rules {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .rules p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .moony {
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: white;
+            margin-top: 10px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
         }
 
         @media (max-width: 480px) {
-            .outer {
+            body {
                 padding: 16px;
             }
-            .inner {
-                padding: 28px 20px 32px;
+            .header {
+                padding: 22px 16px;
             }
             .logo {
-                font-size: 2rem;
+                font-size: 24px;
             }
-            #qrcode canvas,
-            #qrcode img {
-                width: 160px;
-                height: 160px;
+            .question-mark {
+                font-size: 60px;
+            }
+            .title {
+                font-size: 22px;
+            }
+            .form-section {
+                padding: 8px 20px 20px;
+            }
+            input,
+            button {
+                padding: 14px 18px;
+                border-radius: 14px;
+            }
+            .rules {
+                padding: 16px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="outer">
-        <div class="inner">
-            <!-- Бренд -->
+    <div class="card">
+        <div class="header">
             <div class="logo">MOONY</div>
-            <div class="sub">NEW YORK STYLE COOKIES</div>
+            <div class="badge">CANDY CHALLENGE</div>
+        </div>
 
-            <!-- QR-код -->
-            <div class="qr-wrapper">
-                <div id="qrcode"></div>
+        <div class="jar-section">
+            <div class="question-mark">?</div>
+            <div class="title">Сколько M&M's в банке?</div>
+            <div class="sub">Угадай точное количество</div>
+        </div>
+
+        <div class="form-section">
+            <div class="input-group">
+                <input type="number" id="guessInput" placeholder="Введите число">
+                <button id="guessBtn">Угадать</button>
             </div>
+            <div id="result" class="result"></div>
+        </div>
 
-            <!-- Текст под QR -->
-            <div class="scan-text">
-                📱 Наведи камеру или отсканируй QR-код
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- Описание акции -->
-            <div class="promo-desc">
-                <span class="highlight">🎁 Угадай количество M&M's в банке</span><br>
-                Победитель заберёт <strong>всю банку конфет</strong> + коробку печенья MOONY с новым вкусом!
-            </div>
-
-            <!-- Футер -->
-            <div class="footer">
-                @moony_thecookie
-            </div>
+        <div class="rules">
+            <p>Угадай точное количество — забери всю банку конфет</p>
+            <div class="moony">MOONY</div>
         </div>
     </div>
 
     <script>
-        // ССЫЛКА НА СТРАНИЦУ С УГАДАЙКОЙ
-        // ⚠️ ЗАМЕНИТЕ НА РЕАЛЬНЫЙ URL, КОГДА ВЫЛОЖИТЕ САЙТ
-        const GAME_URL = 'https://moony-thecookie.ru/mm-guess'; // ← СЮДА ВАШУ ССЫЛКУ
+        const CORRECT_NUMBER = 461;
         
-        function generateQR() {
-            const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = '';
+        function showResult(guess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
             
-            new QRCode(qrContainer, {
-                text: GAME_URL,
-                width: 200,
-                height: 200,
-                colorDark: "#2D2D3A",
-                colorLight: "#FFFFFF",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            let message = '';
+            
+            if (guess >= CORRECT_NUMBER) {
+                message = `${guess} — больше`;
+            } else {
+                message = `${guess} — меньше`;
+            }
+            
+            resultDiv.className = `result lose show`;
+            resultDiv.innerHTML = `
+                <div style="font-size: 18px; margin-bottom: 8px; font-weight: 600;">${message}</div>
+                <div class="prize-text">Попробуй ещё раз!</div>
+            `;
         }
-        
-        document.addEventListener('DOMContentLoaded', generateQR);
-        console.log('QR-код ведёт на:', GAME_URL);
+
+        function handleGuess() {
+            const input = document.getElementById('guessInput');
+            const guess = parseInt(input.value, 10);
+            
+            if (isNaN(guess) || guess < 1 || guess > 2000) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.classList.add('show');
+                resultDiv.className = 'result lose show';
+                resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
+                return;
+            }
+            
+            showResult(guess);
+            input.value = '';
+            input.focus();
+        }
+
+        document.getElementById('guessBtn').addEventListener('click', handleGuess);
+        document.getElementById('guessInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleGuess();
+        });
+        document.getElementById('guessInput').focus();
     </script>
 </body>
 </html>
