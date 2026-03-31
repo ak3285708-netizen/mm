@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MOONY | Угадай M&M's</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #B1B1E8 0%, #8A8AD6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: #B1B1E8;
+        }
+
+        .header {
+            background: white;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-family: 'Lora', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #B1B1E8;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            background: #F0F0FF;
+            display: inline-block;
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #8A8AD6;
+        }
+
+        .jar-section {
+            padding: 32px 24px 16px;
+            text-align: center;
+        }
+
+        .question-mark {
+            font-family: 'Lora', serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-family: 'Lora', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .sub {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .hint {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 6px 16px;
+        }
+
+        .form-section {
+            padding: 8px 24px 24px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 16px 18px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #2D2D3A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            background: white;
+            color: #B1B1E8;
+            border: none;
+            padding: 16px 28px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .result {
+            margin-top: 12px;
+            padding: 18px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            background: white;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result.win {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .result.lose {
+            background: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #F44336;
+        }
+
+        .prize-text {
+            font-weight: 700;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            font-size: 15px;
+        }
+
+        .rules {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .rules p {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.5;
+        }
+
+        .moony {
+            font-family: 'Lora', serif;
+            font-weight: 600;
+            color: white;
+            margin-top: 10px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+            .header {
+                padding: 22px 16px;
+            }
+            .logo {
+                font-size: 24px;
+            }
+            .question-mark {
+                font-size: 60px;
+            }
+            .title {
+                font-size: 22px;
+            }
+            .form-section {
+                padding: 8px 20px 20px;
+            }
+            input, button {
+                padding: 14px 18px;
+            }
+            .rules {
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="logo">MOONY</div>
+            <div class="badge">CANDY CHALLENGE</div>
+        </div>
+
+        <div class="jar-section">
+            <div class="question-mark">?</div>
+            <div class="title">Сколько M&M's в банке?</div>
+            <div class="sub">Угадай точное количество</div>
+            <span class="hint">от 300 до 600</span>
+        </div>
+
+        <div class="form-section">
+            <div class="input-group">
+                <input type="number" id="guessInput" placeholder="Введите число">
+                <button id="guessBtn">Угадать</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+
+        <div class="rules">
+            <p>Угадай точное количество — забери всю банку конфет</p>
+            <div class="moony">MOONY</div>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_NUMBER = 836;
+        let hasWon = false;
+
+        function createConfetti() {
+            const colors = ['#FFFFFF', '#FFD966', '#FFB347', '#D4D4F3', '#B1B1E8'];
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = Math.random() * 8 + 4 + 'px';
+                confetti.style.height = Math.random() * 8 + 4 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.borderRadius = '2px';
+                confetti.style.opacity = 0.7;
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                document.body.appendChild(confetti);
+                
+                const duration = Math.random() * 2000 + 1000;
+                const startTime = performance.now();
+                
+                function animate(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const yPos = progress * window.innerHeight;
+                    const xOffset = Math.sin(progress * Math.PI * 3) * 15;
+                    confetti.style.transform = `translateY(${yPos}px) translateX(${xOffset}px) rotate(${progress * 720}deg)`;
+                    confetti.style.opacity = 1 - progress;
+                    if (progress < 1) requestAnimationFrame(animate);
+                    else confetti.remove();
+                }
+                requestAnimationFrame(animate);
+            }
+        }
+
+        function showResult(isWin, guess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+            
+            if (isWin && !hasWon) {
+                hasWon = true;
+                resultDiv.className = 'result win show';
+                resultDiv.innerHTML = `
+                    <div style="font-size: 24px; margin-bottom: 6px; font-weight: 700;">ПОБЕДА!</div>
+                    <div>В банке ${CORRECT_NUMBER} конфет — вы угадали!</div>
+                    <div class="prize-text">ВСЯ БАНКА КОНФЕТ — ВАША!<br>Покажите этот экран продавцу MOONY</div>
+                `;
+                createConfetti();
+            } else if (isWin && hasWon) {
+                resultDiv.className = 'result win show';
+                resultDiv.innerHTML = `<div>Вы уже победили! Заберите приз в киоске.</div>`;
+            } else {
+                let hint = guess > CORRECT_NUMBER ? 'больше, чем в банке' : 'меньше, чем в банке';
+                resultDiv.className = 'result lose show';
+                resultDiv.innerHTML = `
+                    <div>${guess} — ${hint}</div>
+                    <div class="prize-text">Попробуйте ещё раз</div>
+                `;
+            }
+        }
+
+        function handleGuess() {
+            const input = document.getElementById('guessInput');
+            const guess = parseInt(input.value, 10);
+            
+            if (isNaN(guess) || guess < 1 || guess > 1000) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.classList.add('show');
+                resultDiv.className = 'result lose show';
+                resultDiv.innerHTML = `<div>Введите число от 1 до 1000</div>`;
+                return;
+            }
+            
+            const isCorrect = (guess === CORRECT_NUMBER);
+            showResult(isCorrect, guess);
+            
+            if (!isCorrect) {
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        document.getElementById('guessBtn').addEventListener('click', handleGuess);
+        document.getElementById('guessInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleGuess();
+        });
+        document.getElementById('guessInput').focus();
+    </script>
+</body>
+</html>
