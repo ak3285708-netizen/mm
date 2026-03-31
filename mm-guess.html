@@ -26,6 +26,9 @@
             max-width: 480px;
             width: 100%;
             background: #B1B1E8;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
         }
 
         .header {
@@ -47,6 +50,7 @@
             background: #F0F0FF;
             display: inline-block;
             padding: 5px 14px;
+            border-radius: 30px;
             font-size: 12px;
             font-weight: 500;
             color: #8A8AD6;
@@ -81,14 +85,6 @@
             margin-bottom: 16px;
         }
 
-        .hint {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            background: rgba(255, 255, 255, 0.15);
-            display: inline-block;
-            padding: 6px 16px;
-        }
-
         .form-section {
             padding: 8px 24px 24px;
         }
@@ -106,6 +102,7 @@
             font-weight: 500;
             text-align: center;
             border: none;
+            border-radius: 16px;
             font-family: 'Inter', sans-serif;
             background: white;
             color: #2D2D3A;
@@ -124,6 +121,7 @@
             padding: 16px 28px;
             font-size: 15px;
             font-weight: 700;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
@@ -138,6 +136,7 @@
         .result {
             margin-top: 12px;
             padding: 18px;
+            border-radius: 16px;
             display: none;
             font-size: 14px;
             line-height: 1.5;
@@ -161,12 +160,6 @@
             }
         }
 
-        .result.win {
-            background: #E8F5E9;
-            color: #2E7D32;
-            border-left: 4px solid #4CAF50;
-        }
-
         .result.lose {
             background: #FFEBEE;
             color: #C62828;
@@ -177,7 +170,7 @@
             font-weight: 700;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid rgba(0,0,0,0.08);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
             font-size: 15px;
         }
 
@@ -222,8 +215,10 @@
             .form-section {
                 padding: 8px 20px 20px;
             }
-            input, button {
+            input,
+            button {
                 padding: 14px 18px;
+                border-radius: 14px;
             }
             .rules {
                 padding: 16px 20px;
@@ -242,7 +237,6 @@
             <div class="question-mark">?</div>
             <div class="title">Сколько M&M's в банке?</div>
             <div class="sub">Угадай точное количество</div>
-            <span class="hint">от 300 до 600</span>
         </div>
 
         <div class="form-section">
@@ -260,87 +254,42 @@
     </div>
 
     <script>
-        const CORRECT_NUMBER = 836;
-        let hasWon = false;
-
-        function createConfetti() {
-            const colors = ['#FFFFFF', '#FFD966', '#FFB347', '#D4D4F3', '#B1B1E8'];
-            for (let i = 0; i < 100; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.width = Math.random() * 8 + 4 + 'px';
-                confetti.style.height = Math.random() * 8 + 4 + 'px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * 100 + '%';
-                confetti.style.top = '-10px';
-                confetti.style.borderRadius = '2px';
-                confetti.style.opacity = 0.7;
-                confetti.style.zIndex = '9999';
-                confetti.style.pointerEvents = 'none';
-                document.body.appendChild(confetti);
-                
-                const duration = Math.random() * 2000 + 1000;
-                const startTime = performance.now();
-                
-                function animate(now) {
-                    const elapsed = now - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const yPos = progress * window.innerHeight;
-                    const xOffset = Math.sin(progress * Math.PI * 3) * 15;
-                    confetti.style.transform = `translateY(${yPos}px) translateX(${xOffset}px) rotate(${progress * 720}deg)`;
-                    confetti.style.opacity = 1 - progress;
-                    if (progress < 1) requestAnimationFrame(animate);
-                    else confetti.remove();
-                }
-                requestAnimationFrame(animate);
-            }
-        }
-
-        function showResult(isWin, guess) {
+        const CORRECT_NUMBER = 461;
+        
+        function showResult(guess) {
             const resultDiv = document.getElementById('result');
             resultDiv.classList.add('show');
             
-            if (isWin && !hasWon) {
-                hasWon = true;
-                resultDiv.className = 'result win show';
-                resultDiv.innerHTML = `
-                    <div style="font-size: 24px; margin-bottom: 6px; font-weight: 700;">ПОБЕДА!</div>
-                    <div>В банке ${CORRECT_NUMBER} конфет — вы угадали!</div>
-                    <div class="prize-text">ВСЯ БАНКА КОНФЕТ — ВАША!<br>Покажите этот экран продавцу MOONY</div>
-                `;
-                createConfetti();
-            } else if (isWin && hasWon) {
-                resultDiv.className = 'result win show';
-                resultDiv.innerHTML = `<div>Вы уже победили! Заберите приз в киоске.</div>`;
+            let message = '';
+            
+            if (guess >= CORRECT_NUMBER) {
+                message = `${guess} — больше`;
             } else {
-                let hint = guess > CORRECT_NUMBER ? 'больше, чем в банке' : 'меньше, чем в банке';
-                resultDiv.className = 'result lose show';
-                resultDiv.innerHTML = `
-                    <div>${guess} — ${hint}</div>
-                    <div class="prize-text">Попробуйте ещё раз</div>
-                `;
+                message = `${guess} — меньше`;
             }
+            
+            resultDiv.className = `result lose show`;
+            resultDiv.innerHTML = `
+                <div style="font-size: 18px; margin-bottom: 8px; font-weight: 600;">${message}</div>
+                <div class="prize-text">Попробуй ещё раз!</div>
+            `;
         }
 
         function handleGuess() {
             const input = document.getElementById('guessInput');
             const guess = parseInt(input.value, 10);
             
-            if (isNaN(guess) || guess < 1 || guess > 1000) {
+            if (isNaN(guess) || guess < 1 || guess > 2000) {
                 const resultDiv = document.getElementById('result');
                 resultDiv.classList.add('show');
                 resultDiv.className = 'result lose show';
-                resultDiv.innerHTML = `<div>Введите число от 1 до 1000</div>`;
+                resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
                 return;
             }
             
-            const isCorrect = (guess === CORRECT_NUMBER);
-            showResult(isCorrect, guess);
-            
-            if (!isCorrect) {
-                input.value = '';
-                input.focus();
-            }
+            showResult(guess);
+            input.value = '';
+            input.focus();
         }
 
         document.getElementById('guessBtn').addEventListener('click', handleGuess);
