@@ -85,15 +85,6 @@
             margin-bottom: 16px;
         }
 
-        .hint {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            background: rgba(255, 255, 255, 0.15);
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 30px;
-        }
-
         .form-section {
             padding: 8px 24px 24px;
         }
@@ -246,7 +237,6 @@
             <div class="question-mark">?</div>
             <div class="title">Сколько M&M's в банке?</div>
             <div class="sub">Угадай точное количество</div>
-            <span class="hint">от 300 до 600</span>
         </div>
 
         <div class="form-section">
@@ -264,32 +254,24 @@
     </div>
 
     <script>
-        const CORRECT_NUMBER = 836;
+        const CORRECT_NUMBER = 461;
         
-        function getHintMessage(guess) {
-            if (guess > CORRECT_NUMBER) {
-                return {
-                    message: `${guess} — чуточку больше`,
-                    hint: "Попробуй ещё раз!"
-                };
-            } else {
-                return {
-                    message: `${guess} — чуточку меньше`,
-                    hint: "Попробуй ещё раз!"
-                };
-            }
-        }
-
         function showResult(guess) {
             const resultDiv = document.getElementById('result');
             resultDiv.classList.add('show');
             
-            const hintData = getHintMessage(guess);
+            let message = '';
+            
+            if (guess >= CORRECT_NUMBER) {
+                message = `${guess} — больше`;
+            } else {
+                message = `${guess} — меньше`;
+            }
             
             resultDiv.className = `result lose show`;
             resultDiv.innerHTML = `
-                <div style="font-size: 18px; margin-bottom: 8px; font-weight: 600;">${hintData.message}</div>
-                <div class="prize-text">${hintData.hint}</div>
+                <div style="font-size: 18px; margin-bottom: 8px; font-weight: 600;">${message}</div>
+                <div class="prize-text">Попробуй ещё раз!</div>
             `;
         }
 
