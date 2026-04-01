@@ -84,7 +84,7 @@
             font-size: 13px;
             color: rgba(255, 255, 255, 0.85);
             font-weight: 500;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .hint {
@@ -94,7 +94,6 @@
             display: inline-block;
             padding: 5px 14px;
             border-radius: 30px;
-            margin-top: 6px;
         }
 
         .form-section {
@@ -175,10 +174,10 @@
             }
         }
 
-        .result.lose {
-            background: #FFEBEE;
-            color: #C62828;
-            border-left: 4px solid #F44336;
+        .result.neutral {
+            background: #FFF3E0;
+            color: #E67E22;
+            border-left: 4px solid #FF9800;
         }
 
         .prize-text {
@@ -282,18 +281,13 @@
             const resultDiv = document.getElementById('result');
             resultDiv.classList.add('show');
             
-            let message = '';
+            // ВСЕГДА ОДИНАКОВОЕ СООБЩЕНИЕ
+            const message = `Эх, не угадали... не беда — попробуйте ещё!`;
             
-            if (guess >= CORRECT_NUMBER) {
-                message = `${guess} — больше`;
-            } else {
-                message = `${guess} — меньше`;
-            }
-            
-            resultDiv.className = `result lose show`;
+            resultDiv.className = `result neutral show`;
             resultDiv.innerHTML = `
                 <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">${message}</div>
-                <div class="prize-text">Попробуй ещё раз!</div>
+                <div class="prize-text">Удачи! 🍀</div>
             `;
         }
 
@@ -304,7 +298,7 @@
             if (isNaN(guess) || guess < 1 || guess > 2000) {
                 const resultDiv = document.getElementById('result');
                 resultDiv.classList.add('show');
-                resultDiv.className = 'result lose show';
+                resultDiv.className = 'result neutral show';
                 resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
                 return;
             }
