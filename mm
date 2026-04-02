@@ -58,43 +58,79 @@
             color: #8A8AD6;
         }
 
-        .error-section {
-            padding: 40px 24px;
+        .jar-section {
+            padding: 24px 20px 12px;
             text-align: center;
         }
 
-        .error-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        .error-title {
+        .question-mark {
             font-family: 'Lora', serif;
-            font-size: 24px;
+            font-size: 56px;
             font-weight: 700;
             color: white;
             margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .error-message {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 24px;
+        .title {
+            font-family: 'Lora', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
         }
 
-        .error-code {
+        .sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .hint {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: monospace;
-            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 30px;
         }
 
-        .retry-btn {
+        .form-section {
+            padding: 8px 20px 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #2D2D3A;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+
+        button {
             background: white;
             color: #B1B1E8;
             border: none;
-            padding: 14px 28px;
+            padding: 14px 20px;
             font-size: 15px;
             font-weight: 700;
             border-radius: 14px;
@@ -102,27 +138,111 @@
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-top: 10px;
+            width: 100%;
         }
 
-        .retry-btn:hover {
+        button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .footer {
+        .result {
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 14px;
+            display: none;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+            background: white;
+            word-break: break-word;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result.neutral {
+            background: #FFF3E0;
+            color: #E67E22;
+            border-left: 4px solid #FF9800;
+        }
+
+        .prize-text {
+            font-weight: 700;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 14px;
+        }
+
+        .rules {
             background: rgba(255, 255, 255, 0.1);
             padding: 16px 20px;
             text-align: center;
+        }
+
+        .rules p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
         }
 
         .moony {
             font-family: 'Lora', serif;
             font-weight: 600;
             color: white;
+            margin-top: 8px;
             font-size: 11px;
             letter-spacing: 0.5px;
             opacity: 0.8;
+        }
+
+        @media (min-width: 480px) {
+            .card {
+                max-width: 420px;
+            }
+            
+            .input-group {
+                flex-direction: row;
+            }
+            
+            input {
+                flex: 2;
+            }
+            
+            button {
+                flex: 1;
+                width: auto;
+            }
+            
+            .jar-section {
+                padding: 28px 24px 16px;
+            }
+            
+            .question-mark {
+                font-size: 64px;
+            }
+            
+            .title {
+                font-size: 22px;
+            }
+            
+            .hint {
+                font-size: 13px;
+            }
         }
     </style>
 </head>
@@ -133,21 +253,65 @@
             <div class="badge">CANDY CHALLENGE</div>
         </div>
 
-        <div class="error-section">
-            <div class="error-icon">⚠️</div>
-            <div class="error-title">Превышено количество попыток</div>
-            <div class="error-message">
-                Сервер временно недоступен.<br>
-                Слишком много запросов с вашего IP-адреса.<br>
-                Пожалуйста, попробуйте позже.
-            </div>
-            <button class="retry-btn" onclick="location.reload()">🔄 Попробовать снова</button>
-            <div class="error-code">Error 429: Too Many Requests</div>
+        <div class="jar-section">
+            <div class="question-mark">?</div>
+            <div class="title">Сколько M&M's в банке?</div>
+            <div class="sub">Угадай точное количество</div>
+            <span class="hint">от 300 до 600</span>
         </div>
 
-        <div class="footer">
+        <div class="form-section">
+            <div class="input-group">
+                <input type="number" id="guessInput" placeholder="Введите число">
+                <button id="guessBtn">Угадать</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+
+        <div class="rules">
+            <p>Угадай точное количество — забери всю банку конфет</p>
             <div class="moony">MOONY</div>
         </div>
     </div>
+
+    <script>
+        const CORRECT_NUMBER = 461;
+        
+        function showResult(guess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+            
+            const message = `Эх, не угадали... не беда — попробуйте ещё!`;
+            
+            resultDiv.className = `result neutral show`;
+            resultDiv.innerHTML = `
+                <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">${message}</div>
+                <div class="prize-text">Удачи! 🍀</div>
+            `;
+        }
+
+        function handleGuess() {
+            const input = document.getElementById('guessInput');
+            const guess = parseInt(input.value, 10);
+            
+            if (isNaN(guess) || guess < 1 || guess > 2000) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.classList.add('show');
+                resultDiv.className = 'result neutral show';
+                resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
+                return;
+            }
+            
+            showResult(guess);
+            input.value = '';
+            input.focus();
+        }
+
+        document.getElementById('guessBtn').addEventListener('click', handleGuess);
+        document.getElementById('guessInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleGuess();
+        });
+        document.getElementById('guessInput').focus();
+    </script>
 </body>
 </html>
