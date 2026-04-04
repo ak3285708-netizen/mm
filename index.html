@@ -174,7 +174,13 @@
             }
         }
 
-        .result.neutral {
+        .result.win {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .result.lose {
             background: #FFF3E0;
             color: #E67E22;
             border-left: 4px solid #FF9800;
@@ -275,18 +281,28 @@
     </div>
 
     <script>
+        // ПРАВИЛЬНЫЙ ОТВЕТ — 461 КОНФЕТА
         const CORRECT_NUMBER = 461;
         
         function showResult(guess) {
             const resultDiv = document.getElementById('result');
             resultDiv.classList.add('show');
             
-            const message = `Эх, не угадали... не беда — попробуйте ещё!`;
+            let message = '';
+            let className = '';
             
-            resultDiv.className = `result neutral show`;
+            if (guess === CORRECT_NUMBER) {
+                message = `🎉 ПОБЕДА! 🎉<br>В банке ${CORRECT_NUMBER} конфет — вы угадали!`;
+                className = 'win';
+            } else {
+                message = `Эх, не угадали... не беда — попробуйте ещё!`;
+                className = 'lose';
+            }
+            
+            resultDiv.className = `result ${className} show`;
             resultDiv.innerHTML = `
                 <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">${message}</div>
-                <div class="prize-text">Удачи! 🍀</div>
+                <div class="prize-text">${guess === CORRECT_NUMBER ? 'Заберите свой приз в киоске MOONY! 🎁' : 'Удачи! 🍀'}</div>
             `;
         }
 
@@ -297,7 +313,7 @@
             if (isNaN(guess) || guess < 1 || guess > 2000) {
                 const resultDiv = document.getElementById('result');
                 resultDiv.classList.add('show');
-                resultDiv.className = 'result neutral show';
+                resultDiv.className = 'result lose show';
                 resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
                 return;
             }
