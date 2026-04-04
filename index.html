@@ -126,6 +126,11 @@
             box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
         }
 
+        input:disabled {
+            background: #E0E0E0;
+            color: #999;
+        }
+
         button {
             background: white;
             color: #B1B1E8;
@@ -141,9 +146,15 @@
             width: 100%;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background: #CCCCCC;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .result {
@@ -184,6 +195,12 @@
             background: #FFF3E0;
             color: #E67E22;
             border-left: 4px solid #FF9800;
+        }
+
+        .result.blocked {
+            background: #FFEBEE;
+            color: #C62828;
+            border-left: 4px solid #F44336;
         }
 
         .prize-text {
@@ -281,53 +298,102 @@
     </div>
 
     <script>
-        // ПРАВИЛЬНЫЙ ОТВЕТ — 461 КОНФЕТА
         const CORRECT_NUMBER = 461;
+        const MAX_ATTEMPTS = 10;
         
-        function showResult(guess) {
-            const resultDiv = document.getElementById('result');
+        let attemptsLeft = MAX_ATTEMPTS;
+        let gameActive = true;
+        let gameWon = false;
+        
+        const guessInput = document.getElementById('guessInput');
+        const guessBtn = document.getElementById('guessBtn');
+        const resultDiv = document.getElementById('result');
+        
+        function endGame(message, isWin = false) {
+            gameActive = false;
+            guessInput.disabled = true;
+            guessBtn.disabled = true;
+            
             resultDiv.classList.add('show');
-            
-            let message = '';
-            let className = '';
-            
-            if (guess === CORRECT_NUMBER) {
-                message = `🎉 ПОБЕДА! 🎉<br>В банке ${CORRECT_NUMBER} конфет — вы угадали!`;
-                className = 'win';
+            if (isWin) {
+                resultDiv.className = 'result win show';
             } else {
-                message = `Эх, не угадали... не беда — попробуйте ещё!`;
-                className = 'lose';
+                resultDiv.className = 'result blocked show';
             }
-            
-            resultDiv.className = `result ${className} show`;
-            resultDiv.innerHTML = `
-                <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">${message}</div>
-                <div class="prize-text">${guess === CORRECT_NUMBER ? 'Заберите свой приз в киоске MOONY! 🎁' : 'Удачи! 🍀'}</div>
-            `;
+            resultDiv.innerHTML = message;
         }
-
+        
+        function showResult(guess, isWin) {
+            if (isWin) {
+                gameWon = true;
+                const winMessage = `
+                    <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">🎉 ПОБЕДА! 🎉</div>
+                    <div>В банке ${CORRECT_NUMBER} конфет — вы угадали!</div>
+                    <div class="prize-text">Заберите свой приз в киоске MOONY! 🎁</div>
+                `;
+                endGame(winMessage, true);
+            } else {
+                const loseMessage = `
+                    <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">Эх, не угадали...</div>
+                    <div class="prize-text">Попробуйте ещё раз! 🍀</div>
+                `;
+                resultDiv.className = 'result lose show';
+                resultDiv.innerHTML = loseMessage;
+                resultDiv.classList.add('show');
+                
+                setTimeout(() => {
+                    if (gameActive && !gameWon) {
+                        resultDiv.classList.remove('show');
+                    }
+                }, 1500);
+            }
+        }
+        
         function handleGuess() {
-            const input = document.getElementById('guessInput');
-            const guess = parseInt(input.value, 10);
+            if (!gameActive || gameWon) return;
+            
+            const guess = parseInt(guessInput.value, 10);
             
             if (isNaN(guess) || guess < 1 || guess > 2000) {
-                const resultDiv = document.getElementById('result');
                 resultDiv.classList.add('show');
                 resultDiv.className = 'result lose show';
                 resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
+                setTimeout(() => {
+                    if (gameActive && !gameWon) {
+                        resultDiv.classList.remove('show');
+                    }
+                }, 1500);
                 return;
             }
             
-            showResult(guess);
-            input.value = '';
-            input.focus();
+            const isWin = (guess === CORRECT_NUMBER);
+            
+            if (isWin) {
+                showResult(guess, true);
+                return;
+            }
+            
+            attemptsLeft--;
+            
+            if (attemptsLeft === 0) {
+                const blockedMessage = `
+                    <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">⚠️ Попытки закончились ⚠️</div>
+                    <div class="prize-text">Спасибо за участие!</div>
+                `;
+                endGame(blockedMessage, false);
+                return;
+            }
+            
+            showResult(guess, false);
+            guessInput.value = '';
+            guessInput.focus();
         }
-
-        document.getElementById('guessBtn').addEventListener('click', handleGuess);
-        document.getElementById('guessInput').addEventListener('keypress', (e) => {
+        
+        guessBtn.addEventListener('click', handleGuess);
+        guessInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') handleGuess();
         });
-        document.getElementById('guessInput').focus();
+        guessInput.focus();
     </script>
 </body>
 </html>
