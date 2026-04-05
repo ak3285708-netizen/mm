@@ -298,59 +298,43 @@
     </div>
 
     <script>
-        const CORRECT_NUMBER = 591;
         const MAX_ATTEMPTS = 10;
         
         let attemptsLeft = MAX_ATTEMPTS;
         let gameActive = true;
-        let gameWon = false;
         
         const guessInput = document.getElementById('guessInput');
         const guessBtn = document.getElementById('guessBtn');
         const resultDiv = document.getElementById('result');
         
-        function endGame(message, isWin = false) {
+        function endGame(message) {
             gameActive = false;
             guessInput.disabled = true;
             guessBtn.disabled = true;
             
             resultDiv.classList.add('show');
-            if (isWin) {
-                resultDiv.className = 'result win show';
-            } else {
-                resultDiv.className = 'result blocked show';
-            }
+            resultDiv.className = 'result blocked show';
             resultDiv.innerHTML = message;
         }
         
-        function showResult(guess, isWin) {
-            if (isWin) {
-                gameWon = true;
-                const winMessage = `
-                    <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">🎉 ПОБЕДА! 🎉</div>
-                    <div>В банке ${CORRECT_NUMBER} конфет — вы угадали!</div>
-                    <div class="prize-text">Заберите свой приз в киоске MOONY! 🎁</div>
-                `;
-                endGame(winMessage, true);
-            } else {
-                const loseMessage = `
-                    <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">Эх, не угадали...</div>
-                    <div class="prize-text">Попробуйте ещё раз! 🍀</div>
-                `;
-                resultDiv.className = 'result lose show';
-                resultDiv.innerHTML = loseMessage;
-                resultDiv.classList.add('show');
-                
-                setTimeout(() => {
-                    if (gameActive && !gameWon) {
-                        resultDiv.classList.remove('show');
-                    }
-                }, 1500);
-            }
+        function showResult() {
+            const loseMessage = `
+                <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">Эх, не угадали...</div>
+                <div class="prize-text">Попробуйте ещё раз! 🍀</div>
+            `;
+            resultDiv.className = 'result lose show';
+            resultDiv.innerHTML = loseMessage;
+            resultDiv.classList.add('show');
+            
+            setTimeout(() => {
+                if (gameActive) {
+                    resultDiv.classList.remove('show');
+                }
+            }, 1500);
         }
         
         function handleGuess() {
-            if (!gameActive || gameWon) return;
+            if (!gameActive) return;
             
             const guess = parseInt(guessInput.value, 10);
             
@@ -359,17 +343,10 @@
                 resultDiv.className = 'result lose show';
                 resultDiv.innerHTML = `<div>Введите число от 1 до 2000</div>`;
                 setTimeout(() => {
-                    if (gameActive && !gameWon) {
+                    if (gameActive) {
                         resultDiv.classList.remove('show');
                     }
                 }, 1500);
-                return;
-            }
-            
-            const isWin = (guess === CORRECT_NUMBER);
-            
-            if (isWin) {
-                showResult(guess, true);
                 return;
             }
             
@@ -380,11 +357,11 @@
                     <div style="font-size: 17px; margin-bottom: 6px; font-weight: 600;">⚠️ Попытки закончились ⚠️</div>
                     <div class="prize-text">Спасибо за участие!</div>
                 `;
-                endGame(blockedMessage, false);
+                endGame(blockedMessage);
                 return;
             }
             
-            showResult(guess, false);
+            showResult();
             guessInput.value = '';
             guessInput.focus();
         }
