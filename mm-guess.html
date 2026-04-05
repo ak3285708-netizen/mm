@@ -298,7 +298,7 @@
     </div>
 
     <script>
-        const CORRECT_NUMBER = 461;
+        const CORRECT_NUMBER = 591;
         const MAX_ATTEMPTS = 10;
         
         let attemptsLeft = MAX_ATTEMPTS;
